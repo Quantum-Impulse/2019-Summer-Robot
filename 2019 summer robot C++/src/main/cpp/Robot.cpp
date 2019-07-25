@@ -9,8 +9,11 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <CameraServer.h>
 #include "WPILib.h"
+#include "frc/WPILib.h" 
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
+#include "cameraserver/CameraServer.h"
+#include "DriveTrain.hpp"
 
 // USB Camera Libraries
 #include <cscore_oo.h>
@@ -23,59 +26,72 @@ static void VisionThread()
       camera.SetResolution(240, 120);
       camera.SetFPS(15);
       cs::CvSink cvSink = cameraServer->GetInstance()->GetVideo();
-      cs::CvSource outputStreamStd = cameraServer->GetInstance()->PutVideo("Gray", 240, 120);
+      cs::CvSource outputStreamStd = cameraServer->GetInstance()->PutVideo("DriverStaionCam", 240, 120);
       cv::Mat source;
       cv::Mat output;
       while(true) {
           cvSink.GrabFrame(source);
-          cvtColor(source, output, cv::COLOR_BGR2GRAY);
+          cvtColor(source, output, cv::COLOR_BGR2RGB);
           outputStreamStd.PutFrame(output);
       }
   }
 
+void cameraThread() {
+  cs::UsbCamera camera = cs::UsbCamera("default_cam", 0);
+  cs::CvSource outputStream = frc::CameraServer::GetInstance()->PutVideo(
+      "DriveStationVideo", 240, 120);
+  cs::CvSink front = frc::CameraServer::GetInstance()->GetVideo(camera);
+  cv::Mat mat;
+  while (1) {
+    front.GrabFrame(mat);
+    outputStream.PutFrame(mat);
+  }
+}
+
 void Robot::RobotInit() {
-  compresser->Start();
+  compressor->Start();
   std::thread visionThread(VisionThread);
   visionThread.detach();
+  //DriveTrain driveTrain(m_leftTopMotor, m_rightTopMotor, m_leftBottomMotor, m_rightBottomMotor, Driver, ahrs, TopL, TopR, BotL, BotR);
 }
 
 void Robot::RobotPeriodic() {
   /* This program utilizes try/catch statements throughout
   for less complicated error handling.*/
   
-  try
-  { /* Renaming of the buttons for easier reading of the code and computation, 
-    all button usages are defined here */
+//   try
+//   { /* Renaming of the buttons for easier reading of the code and computation, 
+//     all button usages are defined here */
     
- /* Driver Varible botton mapping   */
-    LT1 = Driver.LT();
-    LB1 = Driver.LB();
-    RT1 = Driver.RT();
-    RB1 = Driver.RB();
-    X1  = Driver.X();
-    Y1  = Driver.Y();
-    A1  = Driver.A();
-    XL1 = Driver.L().first;
-    YL1 = Driver.L().second;
-    XR1 = Driver.R().first;
-    YR1 = Driver.R().second;
+//  /* Driver Varible botton mapping   */
+//     LT1 = Driver.LT();
+//     LB1 = Driver.LB();
+//     RT1 = Driver.RT();
+//     RB1 = Driver.RB();
+//     X1  = Driver.X();
+//     Y1  = Driver.Y();
+//     A1  = Driver.A();
+//     XL1 = Driver.L().first;
+//     YL1 = Driver.L().second;
+//     XR1 = Driver.R().first;
+//     YR1 = Driver.R().second;
 
- /* Opartor Varible botton mappings */
-    LT2 = Operator.LT();
-    LB2 = Operator.LB();
-    RT2 = Operator.RT();
-    RB2 = Operator.RB();
-    X2  = Operator.X();
-    Y2  = Operator.Y();
-    A2  = Operator.A();
-    XL2 = Operator.L().first;
-    YL2 = Operator.L().second;
-    XR2 = Operator.R().first;
-    YR2 = Operator.R().second;
+//  /* Opartor Varible botton mappings */
+//     LT2 = Operator.LT();
+//     LB2 = Operator.LB();
+//     RT2 = Operator.RT();
+//     RB2 = Operator.RB();
+//     X2  = Operator.X();
+//     Y2  = Operator.Y();
+//     A2  = Operator.A();
+//     XL2 = Operator.L().first;
+//     YL2 = Operator.L().second;
+//     XR2 = Operator.R().first;
+//     YR2 = Operator.R().second;
 
-  }catch(const std::exception& UpdateBottons){
-    std::cerr << UpdateBottons.what() << " Update Botton Error" << '\n';
-  }
+//   }catch(const std::exception& UpdateBottons){
+//     std::cerr << UpdateBottons.what() <<" Update Botton Error" << '\n';
+//   }
 }
 
 void Robot::AutonomousInit() {}
