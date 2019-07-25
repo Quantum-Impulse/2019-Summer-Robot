@@ -9,7 +9,8 @@
 #include <frc/Drive/DifferentialDrive.h>
 #include <frc/drive/MecanumDrive.h>
 #include <frc/SpeedControllerGroup.h>
-
+#include <frc/DoubleSolenoid.h>
+#include "AHRS.h"
 
 /**
  * @class	    DriveTrain
@@ -33,25 +34,30 @@ DriveTrain(rev::CANSparkMax* TopleftMotor ,
           rev::CANSparkMax* BottomLeftMotor, 
           rev::CANSparkMax* BottomRightMotor, 
           FRC5572Controller* Driver,
-          AHRS *ahrs);
+          AHRS *ahrs,
+          frc::DoubleSolenoid* TopL,
+          frc::DoubleSolenoid* TopR,
+          frc::DoubleSolenoid* BotL,
+          frc::DoubleSolenoid* BotR);
+
+~DriveTrain();
 
 
 void Drive();
 
+void POut();
 
+void PRetract();
 
 private:
-  frc::DifferentialDrive* TRobotDrive;
   frc::MecanumDrive* MRobotDrive;
   frc::SpeedControllerGroup* LeftMotors;
   frc::SpeedControllerGroup* RightMotors;
   FRC5572Controller* Driver;
-  
-  bool Switch = false, Crabing = true;
-
-  enum State{TankDrive, Mecanum };
-  
+  frc::DoubleSolenoid* TopL;
+  frc::DoubleSolenoid* TopR;
+  frc::DoubleSolenoid* BotL;
+  frc::DoubleSolenoid* BotR;
+  AHRS* ahrs;
   };  
-
-
 #endif

@@ -9,6 +9,16 @@ FRC5572Controller::FRC5572Controller(int I) {
 FRC5572Controller::~FRC5572Controller(){
 	delete pad;
 }
+void FRC5572Controller::UpdateToggleA(){
+    if(pad->GetRawButton(X_BUTTON)){
+        if(!togglePressedA){
+            toggleA = !toggleA;
+            togglePressedA = true;
+        }
+    }else{
+        togglePressedA = false;
+        }
+    }
 
 double FRC5572Controller::LT() {
 	return pad->GetRawAxis(LEFT_z);

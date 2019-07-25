@@ -31,6 +31,12 @@
  */
 class FRC5572Controller {
 public:
+  /*! \Varibles for the toggle
+  */
+  bool toggleA = false, togglePressedA = false;
+  /*! \brief function performs toggle tasks
+  */
+  void UpdateToggleA();
   /*! \brief Constructor
    * Sets up game controller and communication with the Driverstation
    * \param x The value associated with the controller. To determine this, open the drivestation and go to the controllers tab. Press any button on the controller. Whichever controller on the list highlights green is the controller, and the number next to it is the one you should insert here.
